@@ -1,0 +1,4 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+(cat $1 | grep -E '^[a-z]+(\([a-zA-Z0-9_-]+\))?!?:\s+.+$') || exit 1
