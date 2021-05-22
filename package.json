@@ -13,6 +13,8 @@
     "test": "jest --detectOpenHandles",
     "test:watch": "npm run test -- --watch",
     "test:cover": "npm run test -- --no-cache --coverage",
+    "test:prepare:seaweedfs:master": "mkdir -p __tests__/__dist__ && cd __tests__/__dist__ && SEAWEEDFS_VERSION=2.48 ../../bin/install-seaweedfs.sh && ./weed master -mdir=. -port=3339",
+    "test:prepare:seaweedfs:volume": "mkdir -p __tests__/__dist__/data && cd __tests__/__dist__ && SEAWEEDFS_VERSION=2.48 ../../bin/install-seaweedfs.sh && ./weed volume -dir=./data -port=3838 -mserver=localhost:3339",
     "prepare": "husky install",
     "prepublishOnly": "npm run qc",
     "qc": "npm run lint && npm run test",
