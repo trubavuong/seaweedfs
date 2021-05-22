@@ -28,7 +28,9 @@
       "type": "node",
       "request": "launch",
       "name": "Jest",
-      "env": {},
+      "env": {
+        "SEAWEEDFS_ENDPOINT": "http://localhost:3339"
+      },
       "runtimeArgs": [
         "--inspect-brk",
         "${workspaceRoot}/node_modules/.bin/jest",
@@ -44,7 +46,9 @@
       "type": "node",
       "request": "launch",
       "name": "Jest: $file",
-      "env": {},
+      "env": {
+        "SEAWEEDFS_ENDPOINT": "http://localhost:3339"
+      },
       "runtimeArgs": [
         "--inspect-brk",
         "${workspaceRoot}/node_modules/.bin/jest",

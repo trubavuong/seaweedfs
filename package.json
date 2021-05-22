@@ -1,6 +1,6 @@
 {
   "name": "@trubavuong/seaweedfs",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "NodeJS client for SeaweedFS",
   "main": "lib/index.js",
   "files": [
@@ -10,9 +10,11 @@
     "lint": "eslint --max-warnings 0 *.js lib/**/*.js __tests__/**/*.js",
     "lint:fix": "eslint --max-warnings 0 --fix *.js lib/**/*.js __tests__/**/*.js",
     "nvm": "echo \"export NVM_DIR=\"$HOME/.nvm\"\n[ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\"\" > ~/.huskyrc",
-    "test": "jest --detectOpenHandles",
+    "test": "SEAWEEDFS_ENDPOINT=http://localhost:3339 jest --detectOpenHandles",
     "test:watch": "npm run test -- --watch",
     "test:cover": "npm run test -- --no-cache --coverage",
+    "test:prepare:seaweedfs:master": "mkdir -p __tests__/__dist__ && cd __tests__/__dist__ && SEAWEEDFS_VERSION=2.48 ../../bin/install-seaweedfs.sh && ./weed master -mdir=. -port=3339",
+    "test:prepare:seaweedfs:volume": "mkdir -p __tests__/__dist__/data && cd __tests__/__dist__ && SEAWEEDFS_VERSION=2.48 ../../bin/install-seaweedfs.sh && ./weed volume -dir=./data -port=3838 -mserver=localhost:3339",
     "prepare": "husky install",
     "prepublishOnly": "npm run qc",
     "qc": "npm run lint && npm run test",
@@ -43,5 +45,9 @@
     "generate-changelog": "^1.8.0",
     "husky": "^6.0.0",
     "jest": "^26.6.3"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "form-data": "^4.0.0"
   }
 }
