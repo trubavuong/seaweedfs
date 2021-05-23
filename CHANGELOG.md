@@ -1,3 +1,13 @@
+### 1.1.0 (2021-05-23)
+
+##### Documentation Changes
+
+*  correct APIs with async-await ([7d171f24](https://github.com/trubavuong/seaweedfs/commit/7d171f243caa4628ecd87a3afec3bead253fe1d2))
+
+##### New Features
+
+*  add timeout param to BlockStorage constructor, add() and replace() methods ([5799cc98](https://github.com/trubavuong/seaweedfs/commit/5799cc98b11e37817ca6831579d3039217fc8aa6))
+
 ## 1.0.0 (2021-05-22)
 
 ##### Chores
