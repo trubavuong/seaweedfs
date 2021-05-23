@@ -22,6 +22,12 @@ const { BlockStorage } = require('@trubavuong/seaweedfs');
 const blockStorage = new BlockStorage('http://localhost:9333');
 ```
 
+#### blockStorage.ping([{ timeout = 0 } = {}])
+
+```
+await blockStorage.ping();
+```
+
 #### blockStorage.reserve(count[, { timeout = 0 } = {}])
 
 ```
