@@ -15,15 +15,13 @@ describe('block-storage.js', () => {
 
     const testGetFile = async ({
       blockStorage,
-      name,
+      fid,
       expectExistent,
       expectedData,
     }) => {
       let stream;
       try {
-        stream = await blockStorage.get({
-          name,
-        });
+        stream = await blockStorage.get({ fid });
       }
       catch (error) {
         stream = null;
@@ -88,12 +86,12 @@ describe('block-storage.js', () => {
           data: addData,
         });
         expect(addResult).toBeTruthy();
-        expect(addResult.name).toBeTruthy();
+        expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
 
         await testGetFile(({
           blockStorage,
-          name: addResult.name,
+          fid: addResult.fid,
           expectExistent: true,
           expectedData: addData,
         }));
@@ -109,12 +107,12 @@ describe('block-storage.js', () => {
           data: addData,
         });
         expect(addResult).toBeTruthy();
-        expect(addResult.name).toBeTruthy();
+        expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
 
         await testGetFile(({
           blockStorage,
-          name: addResult.name,
+          fid: addResult.fid,
           expectExistent: true,
           expectedData: addDataContent,
         }));
@@ -126,7 +124,7 @@ describe('block-storage.js', () => {
 
         expect(blockStorage.replace({
           data: replaceData,
-          name: 'unknown',
+          fid: 'unknown',
         })).rejects.toThrow('404');
       });
 
@@ -139,20 +137,20 @@ describe('block-storage.js', () => {
           data: addData,
         });
         expect(addResult).toBeTruthy();
-        expect(addResult.name).toBeTruthy();
+        expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
 
         const replaceResult = await blockStorage.replace({
           data: replaceData,
-          name: addResult.name,
+          fid: addResult.fid,
         });
         expect(replaceResult).toBeTruthy();
-        expect(replaceResult.name).toEqual(addResult.name);
+        expect(replaceResult.fid).toEqual(addResult.fid);
         expect(replaceResult.size).toBeGreaterThan(0);
 
         await testGetFile(({
           blockStorage,
-          name: addResult.name,
+          fid: addResult.fid,
           expectExistent: true,
           expectedData: replaceData,
         }));
@@ -169,20 +167,20 @@ describe('block-storage.js', () => {
           data: addData,
         });
         expect(addResult).toBeTruthy();
-        expect(addResult.name).toBeTruthy();
+        expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
 
         const replaceResult = await blockStorage.replace({
           data: replaceData,
-          name: addResult.name,
+          fid: addResult.fid,
         });
         expect(replaceResult).toBeTruthy();
-        expect(replaceResult.name).toEqual(addResult.name);
+        expect(replaceResult.fid).toEqual(addResult.fid);
         expect(replaceResult.size).toBeGreaterThan(0);
 
         await testGetFile(({
           blockStorage,
-          name: addResult.name,
+          fid: addResult.fid,
           expectExistent: true,
           expectedData: replaceDataContent,
         }));
@@ -203,25 +201,25 @@ describe('block-storage.js', () => {
         const reserveResult = await blockStorage.reserve({
           count: reserveCount,
         });
-        expect(reserveResult.name).toBeTruthy();
+        expect(reserveResult.fid).toBeTruthy();
 
         for (let i = 0; i < reserveCount; i += 1) {
-          const name = `${reserveResult.name}${i > 0 ? `_${i}` : ''}`;
+          const fid = `${reserveResult.fid}${i > 0 ? `_${i}` : ''}`;
           const replaceData = `Hi World: ${i}`;
 
           // eslint-disable-next-line no-await-in-loop
           const replaceResult = await blockStorage.replace({
             data: replaceData,
-            name,
+            fid,
           });
           expect(replaceResult).toBeTruthy();
-          expect(replaceResult.name).toEqual(name);
+          expect(replaceResult.fid).toEqual(fid);
           expect(replaceResult.size).toBeGreaterThan(0);
 
           // eslint-disable-next-line no-await-in-loop
           await testGetFile(({
             blockStorage,
-            name,
+            fid,
             expectExistent: true,
             expectedData: replaceData,
           }));
@@ -237,25 +235,25 @@ describe('block-storage.js', () => {
         const reserveResult = await blockStorage.reserve({
           count: reserveCount,
         });
-        expect(reserveResult.name).toBeTruthy();
+        expect(reserveResult.fid).toBeTruthy();
 
         for (let i = 0; i < reserveCount; i += 1) {
           const replaceData = fs.createReadStream(fileName);
-          const name = `${reserveResult.name}${i > 0 ? `_${i}` : ''}`;
+          const fid = `${reserveResult.fid}${i > 0 ? `_${i}` : ''}`;
 
           // eslint-disable-next-line no-await-in-loop
           const replaceResult = await blockStorage.replace({
             data: replaceData,
-            name,
+            fid,
           });
           expect(replaceResult).toBeTruthy();
-          expect(replaceResult.name).toEqual(name);
+          expect(replaceResult.fid).toEqual(fid);
           expect(replaceResult.size).toBeGreaterThan(0);
 
           // eslint-disable-next-line no-await-in-loop
           await testGetFile(({
             blockStorage,
-            name,
+            fid,
             expectExistent: true,
             expectedData: replaceDataContent,
           }));
@@ -266,7 +264,7 @@ describe('block-storage.js', () => {
         const blockStorage = defaultBlockStorage;
         await testGetFile(({
           blockStorage,
-          name: 'unknown',
+          fid: 'unknown',
           expectExistent: false,
         }));
       });
@@ -275,7 +273,7 @@ describe('block-storage.js', () => {
         const blockStorage = defaultBlockStorage;
 
         expect(blockStorage.delete({
-          name: 'unknown',
+          fid: 'unknown',
         })).rejects.toThrow('404');
       });
 
@@ -283,7 +281,7 @@ describe('block-storage.js', () => {
         const blockStorage = defaultBlockStorage;
 
         const deleteResult = await blockStorage.delete({
-          name: '1,unknown',
+          fid: '1,unknown',
         });
         expect(deleteResult).toBe(true);
       });
@@ -296,17 +294,17 @@ describe('block-storage.js', () => {
           data: addData,
         });
         expect(addResult).toBeTruthy();
-        expect(addResult.name).toBeTruthy();
+        expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
 
         const deleteResult = await blockStorage.delete({
-          name: addResult.name,
+          fid: addResult.fid,
         });
         expect(deleteResult).toBe(true);
 
         await testGetFile(({
           blockStorage,
-          name: addResult.name,
+          fid: addResult.fid,
           expectExistent: false,
         }));
       });
@@ -320,25 +318,25 @@ describe('block-storage.js', () => {
           data: addData,
         });
         expect(addResult).toBeTruthy();
-        expect(addResult.name).toBeTruthy();
+        expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
 
         const replaceResult = await blockStorage.replace({
           data: replaceData,
-          name: addResult.name,
+          fid: addResult.fid,
         });
         expect(replaceResult).toBeTruthy();
-        expect(replaceResult.name).toEqual(addResult.name);
+        expect(replaceResult.fid).toEqual(addResult.fid);
         expect(replaceResult.size).toBeGreaterThan(0);
 
         const deleteResult = await blockStorage.delete({
-          name: addResult.name,
+          fid: addResult.fid,
         });
         expect(deleteResult).toBe(true);
 
         await testGetFile(({
           blockStorage,
-          name: addResult.name,
+          fid: addResult.fid,
           expectExistent: false,
         }));
       });
