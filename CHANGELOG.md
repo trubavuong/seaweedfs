@@ -1,3 +1,9 @@
+## 3.0.0 (2021-05-23)
+
+##### Other Changes
+
+*  don't return true in BlockStorage.delete() ([18d0bdfd](https://github.com/trubavuong/seaweedfs/commit/18d0bdfd6adb519bd1ef03ecebd9bb740701272f))
+
 ### 2.1.0 (2021-05-23)
 
 ##### Build System / Dependencies
