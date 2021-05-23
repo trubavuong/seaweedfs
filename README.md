@@ -80,5 +80,5 @@ const fileStream = await blockStorage.get(fid);
 #### blockStorage.delete(fid[, { timeout = 0 } = {}])
 
 ```
-const isDeleted = await blockStorage.delete(fid);
+await blockStorage.delete(fid);
 ```
