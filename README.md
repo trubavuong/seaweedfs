@@ -21,6 +21,7 @@ const { BlockStorage } = require('@trubavuong/seaweedfs');
 ```
 const blockStorage = new BlockStorage({
   endpoint: 'http://localhost:9333',
+  timeout: 1000, // optional, default HTTP timeout in ms, default 10000
 });
 ```
 
@@ -32,20 +33,22 @@ const { name } = await blockStorage.reserve({
 });
 ```
 
-#### blockStorage.add({ data })
+#### blockStorage.add({ data, timeout })
 
 ```
 const { name, size } = await blockStorage.add({
   data: fileData,
+  timeout: 5000, // optional, HTTP timeout, default 60000
 });
 ```
 
-#### blockStorage.replace({ data, name })
+#### blockStorage.replace({ data, name, timeout })
 
 ```
 const { name, size } = await blockStorage.replace({
   name: fid,
   data: fileData,
+  timeout: 5000, // optional, HTTP timeout, default 60000
 });
 ```
 
