@@ -1,3 +1,13 @@
+### 2.1.0 (2021-05-23)
+
+##### Build System / Dependencies
+
+*  include bin directory in published package ([3b1e5ae8](https://github.com/trubavuong/seaweedfs/commit/3b1e5ae87259eeea738a89504008cfaa0aeaa8d6))
+
+##### New Features
+
+*  add BlockStorage.ping() ([6d862772](https://github.com/trubavuong/seaweedfs/commit/6d86277256ddad994b66fdd07dccee21bc54e182))
+
 ## 2.0.0 (2021-05-23)
 
 ##### Other Changes

@@ -7,7 +7,7 @@ describe('block-storage.js', () => {
   describe('BlockStorage', () => {
     const defaultBlockStorage = new BlockStorage(process.env.SEAWEEDFS_ENDPOINT);
 
-    const notfoundBlockStorage = new BlockStorage('http://example.com');
+    const notfoundBlockStorage = new BlockStorage('http://localhost:6666');
 
     const testGetFile = async ({
       blockStorage,
@@ -63,12 +63,26 @@ describe('block-storage.js', () => {
       });
     });
 
+    describe('ping()', () => {
+      test('should fail (invalid endpoint)', async () => {
+        const blockStorage = notfoundBlockStorage;
+
+        expect(blockStorage.ping()).rejects.toThrow('ECONNREFUSED');
+      });
+
+      test('should success', async () => {
+        const blockStorage = defaultBlockStorage;
+
+        expect(blockStorage.ping()).resolves.toBeUndefined();
+      });
+    });
+
     describe('workflow', () => {
       test('add() => fail (invalid end point)', async () => {
         const blockStorage = notfoundBlockStorage;
         const addData = 'Hello World';
 
-        expect(blockStorage.add(addData)).rejects.toThrow('404');
+        expect(blockStorage.add(addData)).rejects.toThrow('ECONNREFUSED');
       });
 
       test('add() + get() => success', async () => {
@@ -172,7 +186,7 @@ describe('block-storage.js', () => {
       test('reserve() => fail (invalid end point)', async () => {
         const blockStorage = notfoundBlockStorage;
 
-        expect(blockStorage.reserve(10)).rejects.toThrow('404');
+        expect(blockStorage.reserve(10)).rejects.toThrow('ECONNREFUSED');
       });
 
       test('reserve() + replace() + get() => success', async () => {
