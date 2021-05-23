@@ -27,7 +27,7 @@ const blockStorage = new BlockStorage({
 #### blockStorage.reserve({ count })
 
 ```
-const { name } = blockStorage.reserve({
+const { name } = await blockStorage.reserve({
   count: 10,
 });
 ```
@@ -35,7 +35,7 @@ const { name } = blockStorage.reserve({
 #### blockStorage.add({ data })
 
 ```
-const { name, size } = blockStorage.add({
+const { name, size } = await blockStorage.add({
   data: fileData,
 });
 ```
@@ -43,7 +43,7 @@ const { name, size } = blockStorage.add({
 #### blockStorage.replace({ data, name })
 
 ```
-const { name, size } = blockStorage.replace({
+const { name, size } = await blockStorage.replace({
   name: fid,
   data: fileData,
 });
@@ -52,7 +52,7 @@ const { name, size } = blockStorage.replace({
 #### blockStorage.get({ name })
 
 ```
-const fileStream = blockStorage.get({
+const fileStream = await blockStorage.get({
   name: fid,
 });
 ```
@@ -60,7 +60,7 @@ const fileStream = blockStorage.get({
 #### blockStorage.delete({ name })
 
 ```
-const isDeleted = blockStorage.delete({
+const isDeleted = await blockStorage.delete({
   name: fid,
 });
 ```
