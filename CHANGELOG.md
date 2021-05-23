@@ -1,3 +1,10 @@
+## 2.0.0 (2021-05-23)
+
+##### Other Changes
+
+*  change params of BlockStorage constructor and methods ([3009f29e](https://github.com/trubavuong/seaweedfs/commit/3009f29ea47ff827f77d0d8108ac169657bfd29c))
+*  change response of BlockStorage methods ([8f07b2aa](https://github.com/trubavuong/seaweedfs/commit/8f07b2aaa9c50ac80468c8ea9785e7e5f9759dd5))
+
 ### 1.1.0 (2021-05-23)
 
 ##### Documentation Changes
