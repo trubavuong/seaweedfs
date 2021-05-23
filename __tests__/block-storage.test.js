@@ -270,8 +270,7 @@ describe('block-storage.js', () => {
       test('delete() => success', async () => {
         const blockStorage = defaultBlockStorage;
 
-        const deleteResult = await blockStorage.delete('1,unknown');
-        expect(deleteResult).toBe(true);
+        expect(blockStorage.delete('1,unknown')).resolves.toBeUndefined();
       });
 
       test('add() + delete() + get() => success', async () => {
@@ -283,8 +282,7 @@ describe('block-storage.js', () => {
         expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
 
-        const deleteResult = await blockStorage.delete(addResult.fid);
-        expect(deleteResult).toBe(true);
+        expect(blockStorage.delete(addResult.fid)).resolves.toBeUndefined();
 
         await testGetFile(({
           blockStorage,
@@ -311,8 +309,7 @@ describe('block-storage.js', () => {
         expect(replaceResult.fid).toEqual(addResult.fid);
         expect(replaceResult.size).toBeGreaterThan(0);
 
-        const deleteResult = await blockStorage.delete(addResult.fid);
-        expect(deleteResult).toBe(true);
+        expect(blockStorage.delete(addResult.fid)).resolves.toBeUndefined();
 
         await testGetFile(({
           blockStorage,
