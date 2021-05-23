@@ -19,13 +19,10 @@ const { BlockStorage } = require('@trubavuong/seaweedfs');
 #### Constructor
 
 ```
-const blockStorage = new BlockStorage({
-  endpoint: 'http://localhost:9333',
-  timeout: 1000, // optional, default HTTP timeout in ms, default 10000
-});
+const blockStorage = new BlockStorage('http://localhost:9333');
 ```
 
-#### blockStorage.reserve({ count })
+#### blockStorage.reserve(count[, { timeout = 0 } = {}])
 
 ```
 /*
@@ -36,12 +33,10 @@ const blockStorage = new BlockStorage({
   count: 10,
 }
 */
-const result = await blockStorage.reserve({
-  count: 10,
-});
+const result = await blockStorage.reserve(10);
 ```
 
-#### blockStorage.add({ data, timeout })
+#### blockStorage.add(data[, { timeout = 0 } = {}])
 
 ```
 /*
@@ -53,13 +48,10 @@ const result = await blockStorage.reserve({
   size: 10352,
 }
 */
-const result = await blockStorage.add({
-  data: fileData,
-  timeout: 5000, // optional, HTTP timeout, default 60000
-});
+const result = await blockStorage.add(fileData);
 ```
 
-#### blockStorage.replace({ fid, data, timeout })
+#### blockStorage.replace(fid, data[, { timeout = 0 } = {}])
 
 ```
 /*
@@ -70,25 +62,17 @@ const result = await blockStorage.add({
   eTag: 'b85365fc',
 }
 */
-const result = await blockStorage.replace({
-  fid,
-  data: fileData,
-  timeout: 5000, // optional, HTTP timeout, default 60000
-});
+const result = await blockStorage.replace(fid, fileData);
 ```
 
-#### blockStorage.get({ fid })
+#### blockStorage.get(fid[, { timeout = 0 } = {}])
 
 ```
-const fileStream = await blockStorage.get({
-  fid,
-});
+const fileStream = await blockStorage.get(fid);
 ```
 
-#### blockStorage.delete({ fid })
+#### blockStorage.delete(fid[, { timeout = 0 } = {}])
 
 ```
-const isDeleted = await blockStorage.delete({
-  fid,
-});
+const isDeleted = await blockStorage.delete(fid);
 ```

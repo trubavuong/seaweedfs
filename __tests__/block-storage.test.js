@@ -5,13 +5,9 @@ const BlockStorage = require('../lib/block-storage');
 
 describe('block-storage.js', () => {
   describe('BlockStorage', () => {
-    const defaultBlockStorage = new BlockStorage({
-      endpoint: process.env.SEAWEEDFS_ENDPOINT,
-    });
+    const defaultBlockStorage = new BlockStorage(process.env.SEAWEEDFS_ENDPOINT);
 
-    const notfoundBlockStorage = new BlockStorage({
-      endpoint: 'http://example.com',
-    });
+    const notfoundBlockStorage = new BlockStorage('http://example.com');
 
     const testGetFile = async ({
       blockStorage,
@@ -21,7 +17,7 @@ describe('block-storage.js', () => {
     }) => {
       let stream;
       try {
-        stream = await blockStorage.get({ fid });
+        stream = await blockStorage.get(fid);
       }
       catch (error) {
         stream = null;
@@ -29,7 +25,7 @@ describe('block-storage.js', () => {
 
       return new Promise((resolve, reject) => {
         if (expectExistent) {
-          expect(stream).toBeDefined();
+          expect(stream).toBeTruthy();
 
           let receivedData = '';
           stream.on('data', chunk => {
@@ -52,8 +48,7 @@ describe('block-storage.js', () => {
       test('should fail (invalid end point)', () => {
         [
           undefined,
-          {},
-          { endpoint: null },
+          null,
         ].forEach(args => {
           expect(() => new BlockStorage(args)).toThrow();
         });
@@ -62,7 +57,7 @@ describe('block-storage.js', () => {
       test('should success', () => {
         const baseEndpoint = 'http://localhost:9333';
         [baseEndpoint, `${baseEndpoint}/`].forEach(endpoint => {
-          expect(new BlockStorage({ endpoint }).endpoint)
+          expect(new BlockStorage(endpoint).endpoint)
             .toEqual(baseEndpoint);
         });
       });
@@ -73,18 +68,14 @@ describe('block-storage.js', () => {
         const blockStorage = notfoundBlockStorage;
         const addData = 'Hello World';
 
-        expect(blockStorage.add({
-          data: addData,
-        })).rejects.toThrow('404');
+        expect(blockStorage.add(addData)).rejects.toThrow('404');
       });
 
       test('add() + get() => success', async () => {
         const blockStorage = defaultBlockStorage;
         const addData = 'Hello World';
 
-        const addResult = await blockStorage.add({
-          data: addData,
-        });
+        const addResult = await blockStorage.add(addData);
         expect(addResult).toBeTruthy();
         expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
@@ -103,9 +94,7 @@ describe('block-storage.js', () => {
         const addData = fs.createReadStream(fileName);
         const addDataContent = fs.readFileSync(fileName, 'utf-8');
 
-        const addResult = await blockStorage.add({
-          data: addData,
-        });
+        const addResult = await blockStorage.add(addData);
         expect(addResult).toBeTruthy();
         expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
@@ -122,10 +111,8 @@ describe('block-storage.js', () => {
         const blockStorage = defaultBlockStorage;
         const replaceData = 'Hi World';
 
-        expect(blockStorage.replace({
-          data: replaceData,
-          fid: 'unknown',
-        })).rejects.toThrow('404');
+        expect(blockStorage.replace('unknown', replaceData))
+          .rejects.toThrow('404');
       });
 
       test('add() + replace() + get() => success', async () => {
@@ -133,17 +120,15 @@ describe('block-storage.js', () => {
         const addData = 'Hello World';
         const replaceData = 'Hi World';
 
-        const addResult = await blockStorage.add({
-          data: addData,
-        });
+        const addResult = await blockStorage.add(addData);
         expect(addResult).toBeTruthy();
         expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
 
-        const replaceResult = await blockStorage.replace({
-          data: replaceData,
-          fid: addResult.fid,
-        });
+        const replaceResult = await blockStorage.replace(
+          addResult.fid,
+          replaceData,
+        );
         expect(replaceResult).toBeTruthy();
         expect(replaceResult.fid).toEqual(addResult.fid);
         expect(replaceResult.size).toBeGreaterThan(0);
@@ -163,17 +148,15 @@ describe('block-storage.js', () => {
         const replaceData = fs.createReadStream(fileName);
         const replaceDataContent = fs.readFileSync(fileName, 'utf-8');
 
-        const addResult = await blockStorage.add({
-          data: addData,
-        });
+        const addResult = await blockStorage.add(addData);
         expect(addResult).toBeTruthy();
         expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
 
-        const replaceResult = await blockStorage.replace({
-          data: replaceData,
-          fid: addResult.fid,
-        });
+        const replaceResult = await blockStorage.replace(
+          addResult.fid,
+          replaceData,
+        );
         expect(replaceResult).toBeTruthy();
         expect(replaceResult.fid).toEqual(addResult.fid);
         expect(replaceResult.size).toBeGreaterThan(0);
@@ -189,18 +172,14 @@ describe('block-storage.js', () => {
       test('reserve() => fail (invalid end point)', async () => {
         const blockStorage = notfoundBlockStorage;
 
-        expect(blockStorage.reserve({
-          count: 10,
-        })).rejects.toThrow('404');
+        expect(blockStorage.reserve(10)).rejects.toThrow('404');
       });
 
       test('reserve() + replace() + get() => success', async () => {
         const blockStorage = defaultBlockStorage;
         const reserveCount = 10;
 
-        const reserveResult = await blockStorage.reserve({
-          count: reserveCount,
-        });
+        const reserveResult = await blockStorage.reserve(reserveCount);
         expect(reserveResult.fid).toBeTruthy();
 
         for (let i = 0; i < reserveCount; i += 1) {
@@ -208,10 +187,10 @@ describe('block-storage.js', () => {
           const replaceData = `Hi World: ${i}`;
 
           // eslint-disable-next-line no-await-in-loop
-          const replaceResult = await blockStorage.replace({
-            data: replaceData,
+          const replaceResult = await blockStorage.replace(
             fid,
-          });
+            replaceData,
+          );
           expect(replaceResult).toBeTruthy();
           expect(replaceResult.fid).toEqual(fid);
           expect(replaceResult.size).toBeGreaterThan(0);
@@ -232,9 +211,7 @@ describe('block-storage.js', () => {
         const fileName = __filename;
         const replaceDataContent = fs.readFileSync(fileName, 'utf-8');
 
-        const reserveResult = await blockStorage.reserve({
-          count: reserveCount,
-        });
+        const reserveResult = await blockStorage.reserve(reserveCount);
         expect(reserveResult.fid).toBeTruthy();
 
         for (let i = 0; i < reserveCount; i += 1) {
@@ -242,10 +219,10 @@ describe('block-storage.js', () => {
           const fid = `${reserveResult.fid}${i > 0 ? `_${i}` : ''}`;
 
           // eslint-disable-next-line no-await-in-loop
-          const replaceResult = await blockStorage.replace({
-            data: replaceData,
+          const replaceResult = await blockStorage.replace(
             fid,
-          });
+            replaceData,
+          );
           expect(replaceResult).toBeTruthy();
           expect(replaceResult.fid).toEqual(fid);
           expect(replaceResult.size).toBeGreaterThan(0);
@@ -272,17 +249,14 @@ describe('block-storage.js', () => {
       test('delete() => fail (invalid name)', async () => {
         const blockStorage = defaultBlockStorage;
 
-        expect(blockStorage.delete({
-          fid: 'unknown',
-        })).rejects.toThrow('404');
+        expect(blockStorage.delete('unknown'))
+          .rejects.toThrow('404');
       });
 
       test('delete() => success', async () => {
         const blockStorage = defaultBlockStorage;
 
-        const deleteResult = await blockStorage.delete({
-          fid: '1,unknown',
-        });
+        const deleteResult = await blockStorage.delete('1,unknown');
         expect(deleteResult).toBe(true);
       });
 
@@ -290,16 +264,12 @@ describe('block-storage.js', () => {
         const blockStorage = defaultBlockStorage;
         const addData = 'Hello World';
 
-        const addResult = await blockStorage.add({
-          data: addData,
-        });
+        const addResult = await blockStorage.add(addData);
         expect(addResult).toBeTruthy();
         expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
 
-        const deleteResult = await blockStorage.delete({
-          fid: addResult.fid,
-        });
+        const deleteResult = await blockStorage.delete(addResult.fid);
         expect(deleteResult).toBe(true);
 
         await testGetFile(({
@@ -314,24 +284,20 @@ describe('block-storage.js', () => {
         const addData = 'Hello World';
         const replaceData = 'Hi World';
 
-        const addResult = await blockStorage.add({
-          data: addData,
-        });
+        const addResult = await blockStorage.add(addData);
         expect(addResult).toBeTruthy();
         expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
 
-        const replaceResult = await blockStorage.replace({
-          data: replaceData,
-          fid: addResult.fid,
-        });
+        const replaceResult = await blockStorage.replace(
+          addResult.fid,
+          replaceData,
+        );
         expect(replaceResult).toBeTruthy();
         expect(replaceResult.fid).toEqual(addResult.fid);
         expect(replaceResult.size).toBeGreaterThan(0);
 
-        const deleteResult = await blockStorage.delete({
-          fid: addResult.fid,
-        });
+        const deleteResult = await blockStorage.delete(addResult.fid);
         expect(deleteResult).toBe(true);
 
         await testGetFile(({
