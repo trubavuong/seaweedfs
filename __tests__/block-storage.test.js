@@ -67,13 +67,13 @@ describe('block-storage.js', () => {
       test('should fail (invalid endpoint)', async () => {
         const blockStorage = notfoundBlockStorage;
 
-        expect(blockStorage.ping()).rejects.toThrow('ECONNREFUSED');
+        await expect(blockStorage.ping()).rejects.toThrow('ECONNREFUSED');
       });
 
       test('should success', async () => {
         const blockStorage = defaultBlockStorage;
 
-        expect(blockStorage.ping()).resolves.toBeUndefined();
+        await expect(blockStorage.ping()).resolves.toBeUndefined();
       });
     });
 
@@ -82,7 +82,7 @@ describe('block-storage.js', () => {
         const blockStorage = notfoundBlockStorage;
         const addData = 'Hello World';
 
-        expect(blockStorage.add(addData)).rejects.toThrow('ECONNREFUSED');
+        await expect(blockStorage.add(addData)).rejects.toThrow('ECONNREFUSED');
       });
 
       test('add() + get() => success', async () => {
@@ -125,8 +125,7 @@ describe('block-storage.js', () => {
         const blockStorage = defaultBlockStorage;
         const replaceData = 'Hi World';
 
-        expect(blockStorage.replace('unknown', replaceData))
-          .rejects.toThrow('404');
+        await expect(blockStorage.replace('unknown', replaceData)).rejects.toThrow('404');
       });
 
       test('add() + replace() + get() => success', async () => {
@@ -186,7 +185,7 @@ describe('block-storage.js', () => {
       test('reserve() => fail (invalid end point)', async () => {
         const blockStorage = notfoundBlockStorage;
 
-        expect(blockStorage.reserve(10)).rejects.toThrow('ECONNREFUSED');
+        await expect(blockStorage.reserve(10)).rejects.toThrow('ECONNREFUSED');
       });
 
       test('reserve() + replace() + get() => success', async () => {
@@ -263,14 +262,13 @@ describe('block-storage.js', () => {
       test('delete() => fail (invalid name)', async () => {
         const blockStorage = defaultBlockStorage;
 
-        expect(blockStorage.delete('unknown'))
-          .rejects.toThrow('404');
+        await expect(blockStorage.delete('unknown')).rejects.toThrow('404');
       });
 
       test('delete() => success', async () => {
         const blockStorage = defaultBlockStorage;
 
-        expect(blockStorage.delete('1,unknown')).resolves.toBeUndefined();
+        await expect(blockStorage.delete('1,unknown')).resolves.toBeUndefined();
       });
 
       test('add() + delete() + get() => success', async () => {
@@ -282,7 +280,7 @@ describe('block-storage.js', () => {
         expect(addResult.fid).toBeTruthy();
         expect(addResult.size).toBeGreaterThan(0);
 
-        expect(blockStorage.delete(addResult.fid)).resolves.toBeUndefined();
+        await expect(blockStorage.delete(addResult.fid)).resolves.toBeUndefined();
 
         await testGetFile(({
           blockStorage,
@@ -309,7 +307,7 @@ describe('block-storage.js', () => {
         expect(replaceResult.fid).toEqual(addResult.fid);
         expect(replaceResult.size).toBeGreaterThan(0);
 
-        expect(blockStorage.delete(addResult.fid)).resolves.toBeUndefined();
+        await expect(blockStorage.delete(addResult.fid)).resolves.toBeUndefined();
 
         await testGetFile(({
           blockStorage,
