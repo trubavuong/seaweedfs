@@ -1,3 +1,9 @@
+#### 3.0.1 (2021-05-24)
+
+##### Tests
+
+*  add await before some .rejects/.resolves statements ([2dde8bfe](https://github.com/trubavuong/seaweedfs/commit/2dde8bfe559525fa4c2b8dc822807e8b2aa9a8de))
+
 ## 3.0.0 (2021-05-23)
 
 ##### Other Changes
